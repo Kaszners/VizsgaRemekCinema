@@ -1,7 +1,7 @@
 package hu.nyirszikszi.vizsgaremek.cinema.entity;
 
 
-import hu.nyirszikszi.vizsgaremek.cinema.enums.UserRole;
+import hu.nyirszikszi.vizsgaremek.cinema.enums.TheaterType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,23 +13,16 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "cinema_user")
-public class User {
+@Table(name = "cinema_theater")
+public class Theater {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String name;
 
-    private String password;
-
     @Enumerated(EnumType.STRING)
-    private UserRole role;
-
-    private String email;
-
-    private String fullName;
-
-
+    private TheaterType type;
 
 }
