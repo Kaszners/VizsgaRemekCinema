@@ -1,7 +1,7 @@
 package hu.nyirszikszi.vizsgaremek.cinema.entity;
 
 
-import hu.nyirszikszi.vizsgaremek.cinema.enums.TheaterType;
+import hu.nyirszikszi.vizsgaremek.cinema.enums.TheaterSize;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,9 +20,11 @@ public class Theater {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(nullable = false,unique = true)
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private TheaterType type;
+    @Column(name = "theater_size", nullable = false)
+    private TheaterSize size;
 
 }

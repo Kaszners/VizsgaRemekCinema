@@ -1,6 +1,6 @@
 package hu.nyirszikszi.vizsgaremek.cinema.enums;
 
-public enum TheaterType {
+public enum TheaterSize {
     SMALL,
     LARGE
 }
