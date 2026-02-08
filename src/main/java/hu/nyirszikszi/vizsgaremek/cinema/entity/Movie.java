@@ -24,6 +24,12 @@ public class Movie {
     @Column(name = "movie_duration_minutes" )
     private int duration;
 
+    @Column(name = "poster_url")
+    private String posterUrl;
+
+    @Column(name = "trailer_url")
+    private String trailerUrl;
+
 
 
 
