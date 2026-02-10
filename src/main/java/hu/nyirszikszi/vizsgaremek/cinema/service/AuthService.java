@@ -1,0 +1,82 @@
+package hu.nyirszikszi.vizsgaremek.cinema.service;
+
+import hu.nyirszikszi.vizsgaremek.cinema.dto.LoginRequest;
+import hu.nyirszikszi.vizsgaremek.cinema.dto.RegisterRequest;
+import hu.nyirszikszi.vizsgaremek.cinema.entity.User;
+import hu.nyirszikszi.vizsgaremek.cinema.entity.UserCredentials;
+import hu.nyirszikszi.vizsgaremek.cinema.enums.UserRole;
+import hu.nyirszikszi.vizsgaremek.cinema.exception.DuplicateEmailException;
+import hu.nyirszikszi.vizsgaremek.cinema.exception.DuplicateUsernameException;
+import hu.nyirszikszi.vizsgaremek.cinema.exception.InvalidCredentialsException;
+import hu.nyirszikszi.vizsgaremek.cinema.repository.UserCredentialsRepository;
+import hu.nyirszikszi.vizsgaremek.cinema.repository.UserRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+
+@Service
+public class AuthService {
+
+    private final UserRepository userRepository;
+    private final UserCredentialsRepository userCredentialsRepository;
+
+    public AuthService(UserRepository userRepository, UserCredentialsRepository userCredentialsRepository) {
+        this.userRepository = userRepository;
+        this.userCredentialsRepository = userCredentialsRepository;
+    }
+
+    @Transactional
+    public void register(RegisterRequest request) {
+        userRepository.findByEmailIgnoreCase(request.getEmail()).ifPresent(user -> {
+            throw new DuplicateEmailException(request.getEmail());
+        });
+
+        userCredentialsRepository.findByUsername(request.getUsername()).ifPresent(userCredentials -> {
+            throw new DuplicateUsernameException(request.getUsername());
+        });
+
+
+        User user = new User();
+
+        user.setEmail(request.getEmail());
+        user.setFullName(request.getFullName());
+        user.setRole(UserRole.USER);
+
+        User savedUser = userRepository.save(user);
+
+        UserCredentials userCredentials = new UserCredentials();
+
+        userCredentials.setUsername(request.getUsername());
+        userCredentials.setPassword(request.getPassword());
+        userCredentials.setUserId(savedUser);
+
+        userCredentialsRepository.save(userCredentials);
+
+    }
+
+    public void login(LoginRequest request){
+
+        Optional<UserCredentials> credentials;
+
+        if (request.getUsernameOrEmail().contains("@")){
+            credentials = userCredentialsRepository.findByUser_EmailIgnoreCase(request.getUsernameOrEmail());
+        }else {
+            credentials = userCredentialsRepository.findByUsername(request.getUsernameOrEmail());
+        }
+
+        UserCredentials userCredentials = credentials
+                .orElseThrow(() -> new InvalidCredentialsException());
+
+
+        if (!userCredentials.getPassword().equals(request.getPassword())){
+            throw new InvalidCredentialsException();
+        }
+
+
+
+    }
+
+
+}

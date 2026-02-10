@@ -10,5 +10,5 @@ public interface UserCredentialsRepository extends JpaRepository<UserCredentials
 
     Optional<UserCredentials> findByUsername(String username);
 
-
+    Optional<UserCredentials> findByUser_EmailIgnoreCase(String email);
 }
