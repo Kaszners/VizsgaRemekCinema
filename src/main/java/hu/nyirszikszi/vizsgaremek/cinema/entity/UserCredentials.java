@@ -27,4 +27,8 @@ public class UserCredentials {
 
     @Column(nullable = false)
     private String password;
+
+
+
+
 }
