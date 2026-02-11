@@ -1,6 +1,7 @@
 package hu.nyirszikszi.vizsgaremek.cinema.controller;
 
 
+import hu.nyirszikszi.vizsgaremek.cinema.dto.AuthResponse;
 import hu.nyirszikszi.vizsgaremek.cinema.dto.LoginRequest;
 import hu.nyirszikszi.vizsgaremek.cinema.dto.RegisterRequest;
 import hu.nyirszikszi.vizsgaremek.cinema.service.AuthService;
@@ -27,8 +28,8 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public void login(@RequestBody @Valid LoginRequest request){
-        authService.login(request);
+    public AuthResponse login(@RequestBody @Valid LoginRequest request){
+        return authService.login(request);
     }
 
 
