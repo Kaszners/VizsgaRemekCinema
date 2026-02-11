@@ -1,5 +1,6 @@
 package hu.nyirszikszi.vizsgaremek.cinema.service;
 
+import hu.nyirszikszi.vizsgaremek.cinema.config.SecurityConfig;
 import hu.nyirszikszi.vizsgaremek.cinema.dto.LoginRequest;
 import hu.nyirszikszi.vizsgaremek.cinema.dto.RegisterRequest;
 import hu.nyirszikszi.vizsgaremek.cinema.entity.User;
@@ -11,6 +12,7 @@ import hu.nyirszikszi.vizsgaremek.cinema.exception.InvalidCredentialsException;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.UserCredentialsRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,10 +23,12 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final UserCredentialsRepository userCredentialsRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthService(UserRepository userRepository, UserCredentialsRepository userCredentialsRepository) {
+    public AuthService(UserRepository userRepository, UserCredentialsRepository userCredentialsRepository, SecurityConfig securityConfig, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userCredentialsRepository = userCredentialsRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -49,8 +53,8 @@ public class AuthService {
         UserCredentials userCredentials = new UserCredentials();
 
         userCredentials.setUsername(request.getUsername());
-        userCredentials.setPassword(request.getPassword());
-        userCredentials.setUserId(savedUser);
+        userCredentials.setPassword(passwordEncoder.encode(request.getPassword()));
+        userCredentials.setUser(savedUser);
 
         userCredentialsRepository.save(userCredentials);
 
@@ -70,7 +74,7 @@ public class AuthService {
                 .orElseThrow(() -> new InvalidCredentialsException());
 
 
-        if (!userCredentials.getPassword().equals(request.getPassword())){
+        if (!passwordEncoder.matches(request.getPassword(), userCredentials.getPassword())){
             throw new InvalidCredentialsException();
         }
 
