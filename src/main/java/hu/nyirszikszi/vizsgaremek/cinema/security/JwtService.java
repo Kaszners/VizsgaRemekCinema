@@ -30,4 +30,14 @@ public class JwtService {
     }
 
 
+    public String extractUserName(String token){
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseEncryptedClaims(token)
+                .getPayload()
+                .getSubject();
+    }
+
+
 }

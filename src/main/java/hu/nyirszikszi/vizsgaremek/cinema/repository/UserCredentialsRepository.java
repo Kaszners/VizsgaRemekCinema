@@ -1,6 +1,6 @@
 package hu.nyirszikszi.vizsgaremek.cinema.repository;
 
-import hu.nyirszikszi.vizsgaremek.cinema.entity.User;
+
 import hu.nyirszikszi.vizsgaremek.cinema.entity.UserCredentials;
 import org.springframework.data.jpa.repository.JpaRepository;
 

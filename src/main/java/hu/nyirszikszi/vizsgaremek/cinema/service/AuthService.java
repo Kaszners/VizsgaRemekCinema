@@ -1,6 +1,6 @@
 package hu.nyirszikszi.vizsgaremek.cinema.service;
 
-import hu.nyirszikszi.vizsgaremek.cinema.config.SecurityConfig;
+
 import hu.nyirszikszi.vizsgaremek.cinema.dto.AuthResponse;
 import hu.nyirszikszi.vizsgaremek.cinema.dto.LoginRequest;
 import hu.nyirszikszi.vizsgaremek.cinema.dto.RegisterRequest;
@@ -28,7 +28,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    public AuthService(UserRepository userRepository, UserCredentialsRepository userCredentialsRepository, SecurityConfig securityConfig, PasswordEncoder passwordEncoder, JwtService jwtService) {
+    public AuthService(UserRepository userRepository, UserCredentialsRepository userCredentialsRepository,  PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userRepository = userRepository;
         this.userCredentialsRepository = userCredentialsRepository;
         this.passwordEncoder = passwordEncoder;
@@ -75,7 +75,7 @@ public class AuthService {
         }
 
         UserCredentials userCredentials = credentials
-                .orElseThrow(() -> new InvalidCredentialsException());
+                .orElseThrow(InvalidCredentialsException::new);
 
 
         if (!passwordEncoder.matches(request.getPassword(), userCredentials.getPassword())){
