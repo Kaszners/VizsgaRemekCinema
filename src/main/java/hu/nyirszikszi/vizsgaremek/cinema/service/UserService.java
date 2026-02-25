@@ -28,7 +28,7 @@ public class UserService {
     @Transactional
     public void deleteUserById(int id){
         userRepository.findById(id)
-                .orElseThrow(()-> new UserNotFoundException(id));
+                .orElseThrow(UserNotFoundException :: new );
 
         userCredentialsRepository.deleteByUserId(id);
         userRepository.deleteById(id);
@@ -39,13 +39,17 @@ public class UserService {
     public UserProfileResponse getCurrentUserProfile(){
         String username = SecurityUtil.getCurrentUsername();
 
+        if (username == null){
+            throw new InvalidCredentialsException();
+        }
+
+
         UserCredentials userCredentials = userCredentialsRepository.findByUsername(username)
                 .orElseThrow(InvalidCredentialsException::new);
 
         User user = userCredentials.getUser();
 
         return new UserProfileResponse(
-                user.getId(),
                 user.getEmail(),
                 user.getFullName(),
                 user.getRole()
