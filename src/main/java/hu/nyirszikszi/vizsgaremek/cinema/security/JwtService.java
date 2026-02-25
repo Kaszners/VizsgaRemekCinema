@@ -1,5 +1,6 @@
 package hu.nyirszikszi.vizsgaremek.cinema.security;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -27,16 +28,24 @@ public class JwtService {
                 )
                 .signWith(secretKey)
                 .compact();
+
+    }
+
+    public String extractRole(String token){
+        return extractAllClaims(token).get("role",String.class);
+    }
+
+    private Claims extractAllClaims(String token){
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
 
     public String extractUserName(String token){
-        return Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseEncryptedClaims(token)
-                .getPayload()
-                .getSubject();
+        return extractAllClaims(token).getSubject();
     }
 
 
