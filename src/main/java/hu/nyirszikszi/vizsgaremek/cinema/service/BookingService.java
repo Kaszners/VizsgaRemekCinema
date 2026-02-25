@@ -1,6 +1,7 @@
 package hu.nyirszikszi.vizsgaremek.cinema.service;
 
 
+import hu.nyirszikszi.vizsgaremek.cinema.dto.BookingResponse;
 import hu.nyirszikszi.vizsgaremek.cinema.dto.CreateBookingRequest;
 import hu.nyirszikszi.vizsgaremek.cinema.entity.*;
 import hu.nyirszikszi.vizsgaremek.cinema.enums.BookingStatus;
@@ -13,8 +14,9 @@ import hu.nyirszikszi.vizsgaremek.cinema.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Book;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class BookingService {
@@ -65,6 +67,33 @@ public class BookingService {
         bookingRepository.save(booking);
 
     }
+
+
+    public List<BookingResponse> getCurrentUserBookings(){
+        String username = SecurityUtil.getCurrentUsername();
+
+        if (username ==  null){
+            throw new InvalidCredentialsException();
+        }
+
+        UserCredentials userCredentials = userCredentialsRepository.findByUsername(username)
+                .orElseThrow(InvalidCredentialsException::new);
+
+        User user = userCredentials.getUser();
+
+        return bookingRepository.findAllByUser_Id(user.getId())
+                .stream()
+                .map(booking -> new BookingResponse(
+                        booking.getId(),
+                        booking.getBookingStatus(),
+                        booking.getTimeOfCreation(),
+                        booking.getShowtime().getId(),
+                        booking.getSeat().getId()
+                ))
+                .toList();
+
+    }
+
 
 
 
