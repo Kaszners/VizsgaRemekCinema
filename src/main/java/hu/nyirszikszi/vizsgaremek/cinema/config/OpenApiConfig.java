@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import org.springdoc.core.models.GroupedOpenApi;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
@@ -16,5 +18,17 @@ import org.springframework.context.annotation.Configuration;
         scheme = "bearer",
         bearerFormat = "JWT"
 )
+
+
 public class OpenApiConfig {
+    @Bean
+    public GroupedOpenApi cinemaApi() {
+        return GroupedOpenApi.builder()
+                .group("cinema-api")
+                .packagesToScan(
+                        "hu.nyirszikszi.vizsgaremek.cinema.controller"
+                )
+                .build();
+    }
+
 }

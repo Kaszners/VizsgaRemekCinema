@@ -6,6 +6,7 @@ import hu.nyirszikszi.vizsgaremek.cinema.dto.CreateBookingRequest;
 import hu.nyirszikszi.vizsgaremek.cinema.entity.*;
 import hu.nyirszikszi.vizsgaremek.cinema.enums.BookingStatus;
 import hu.nyirszikszi.vizsgaremek.cinema.exception.InvalidCredentialsException;
+import hu.nyirszikszi.vizsgaremek.cinema.exception.SeatAlreadyBookedException;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.BookingRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.SeatRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.ShowtimeRepository;
@@ -34,8 +35,22 @@ public class BookingService {
         this.seatRepository = seatRepository;
     }
 
+
+
+
+
     @Transactional
     public void createBooking(CreateBookingRequest request){
+
+        boolean alreadyBooked = bookingRepository.existsBySeat_IdAndShowtime_IdAndBookingStatusIn(
+                request.SeatId(),
+                request.showtimeId(),
+                List.of(BookingStatus.PENDING,BookingStatus.CONFIRMED)
+        );
+
+        if(alreadyBooked){
+            throw new SeatAlreadyBookedException();
+        }
 
         String username = SecurityUtil.getCurrentUsername();
 
