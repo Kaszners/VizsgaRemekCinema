@@ -57,7 +57,10 @@ public class ShowtimeSeeder implements CommandLineRunner {
         show4.setTheater(largeTheater);
         show4.setShowStartTime(LocalDateTime.now().plusHours(5));
 
-
+        showtimeRepository.save(show1);
+        showtimeRepository.save(show2);
+        showtimeRepository.save(show3);
+        showtimeRepository.save(show4);
 
     }
 
