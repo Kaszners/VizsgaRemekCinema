@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class DataSeeder implements CommandLineRunner {
+public class TheaterSeeder implements CommandLineRunner {
 
     private final TheaterService theaterService;
     private final TheaterRepository theaterRepository;

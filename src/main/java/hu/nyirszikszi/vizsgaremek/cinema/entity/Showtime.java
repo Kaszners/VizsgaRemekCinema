@@ -29,7 +29,7 @@ public class Showtime {
     @JoinColumn(name = "theater_id")
     private Theater theater;
 
-    @Column(name = "show_date_time")
-    private LocalDateTime showDateTime;
+    @Column(name = "show_start_time")
+    private LocalDateTime showStartTime;
 
 }
