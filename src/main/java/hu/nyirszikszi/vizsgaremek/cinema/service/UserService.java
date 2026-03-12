@@ -11,19 +11,18 @@ import hu.nyirszikszi.vizsgaremek.cinema.repository.UserCredentialsRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.UserRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.util.SecurityUtil;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final UserCredentialsRepository userCredentialsRepository;
 
 
-    public UserService(UserRepository userRepository, UserCredentialsRepository userCredentialsRepository) {
-        this.userRepository = userRepository;
-        this.userCredentialsRepository = userCredentialsRepository;
-    }
+
 
     @Transactional
     public void deleteUserById(int id){

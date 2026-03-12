@@ -30,9 +30,9 @@ public class BookingScheduler {
                         LocalDateTime.now().minusMinutes(10)
                 );
 
-        for(Booking booking : expiredBookings){
-            booking.setBookingStatus(BookingStatus.EXPIRED);
-        }
+        expiredBookings.forEach(
+                booking -> booking.setBookingStatus(BookingStatus.EXPIRED)
+        );
 
         bookingRepository.saveAll(expiredBookings);
 

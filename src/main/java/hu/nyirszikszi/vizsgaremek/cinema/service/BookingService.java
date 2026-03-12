@@ -13,6 +13,7 @@ import hu.nyirszikszi.vizsgaremek.cinema.repository.ShowtimeRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.UserCredentialsRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.util.SecurityUtil;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 
@@ -20,23 +21,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class BookingService {
 
     private final BookingRepository bookingRepository;
     private final UserCredentialsRepository userCredentialsRepository;
     private final ShowtimeRepository showtimeRepository;
     private final SeatRepository seatRepository;
-
-
-    public BookingService(BookingRepository bookingRepository, UserCredentialsRepository userCredentialsRepository, ShowtimeRepository showtimeRepository, SeatRepository seatRepository) {
-        this.bookingRepository = bookingRepository;
-        this.userCredentialsRepository = userCredentialsRepository;
-        this.showtimeRepository = showtimeRepository;
-        this.seatRepository = seatRepository;
-    }
-
-
-
 
 
     @Transactional

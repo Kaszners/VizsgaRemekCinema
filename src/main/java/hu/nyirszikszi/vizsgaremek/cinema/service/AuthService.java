@@ -14,6 +14,7 @@ import hu.nyirszikszi.vizsgaremek.cinema.repository.UserCredentialsRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.UserRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.security.JwtService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ import java.util.Optional;
 
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
 
     private final UserRepository userRepository;
@@ -28,12 +30,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    public AuthService(UserRepository userRepository, UserCredentialsRepository userCredentialsRepository,  PasswordEncoder passwordEncoder, JwtService jwtService) {
-        this.userRepository = userRepository;
-        this.userCredentialsRepository = userCredentialsRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtService = jwtService;
-    }
+
 
     @Transactional
     public void register(RegisterRequest request) {
