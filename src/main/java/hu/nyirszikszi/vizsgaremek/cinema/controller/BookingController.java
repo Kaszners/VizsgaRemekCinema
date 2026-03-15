@@ -3,21 +3,20 @@ package hu.nyirszikszi.vizsgaremek.cinema.controller;
 import hu.nyirszikszi.vizsgaremek.cinema.dto.BookingResponse;
 import hu.nyirszikszi.vizsgaremek.cinema.dto.CreateBookingRequest;
 import hu.nyirszikszi.vizsgaremek.cinema.service.BookingService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/cinema/booking")
 public class BookingController {
 
     private final BookingService bookingService;
 
 
-    public BookingController(BookingService bookingService) {
-        this.bookingService = bookingService;
-    }
 
     @PostMapping
     @PreAuthorize("hasAnyRole('USER','STAFF','ADMIN')")

@@ -5,10 +5,12 @@ import hu.nyirszikszi.vizsgaremek.cinema.entity.Movie;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Order(2)
 public class MovieSeeder implements CommandLineRunner {
 
     private final MovieRepository movieRepository;

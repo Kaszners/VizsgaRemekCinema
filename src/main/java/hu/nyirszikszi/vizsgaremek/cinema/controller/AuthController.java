@@ -6,19 +6,18 @@ import hu.nyirszikszi.vizsgaremek.cinema.dto.LoginRequest;
 import hu.nyirszikszi.vizsgaremek.cinema.dto.RegisterRequest;
 import hu.nyirszikszi.vizsgaremek.cinema.service.AuthService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/cinema/authentication")
 public class AuthController {
 
     private final AuthService authService;
 
 
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")

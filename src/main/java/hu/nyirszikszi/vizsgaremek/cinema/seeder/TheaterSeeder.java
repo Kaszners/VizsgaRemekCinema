@@ -6,10 +6,12 @@ import hu.nyirszikszi.vizsgaremek.cinema.repository.TheaterRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.service.TheaterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Order(1)
 public class TheaterSeeder implements CommandLineRunner {
 
     private final TheaterService theaterService;

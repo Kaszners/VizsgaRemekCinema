@@ -8,12 +8,14 @@ import hu.nyirszikszi.vizsgaremek.cinema.repository.ShowtimeRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.TheaterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
+@Order(3)
 public class ShowtimeSeeder implements CommandLineRunner {
 
     private final ShowtimeRepository showtimeRepository;
@@ -61,7 +63,6 @@ public class ShowtimeSeeder implements CommandLineRunner {
         showtimeRepository.save(show2);
         showtimeRepository.save(show3);
         showtimeRepository.save(show4);
-
     }
 
 

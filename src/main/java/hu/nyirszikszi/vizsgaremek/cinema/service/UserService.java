@@ -42,7 +42,6 @@ public class UserService {
             throw new InvalidCredentialsException();
         }
 
-
         UserCredentials userCredentials = userCredentialsRepository.findByUsername(username)
                 .orElseThrow(InvalidCredentialsException::new);
 
