@@ -6,7 +6,6 @@ import hu.nyirszikszi.vizsgaremek.cinema.enums.UserRole;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.UserCredentialsRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;

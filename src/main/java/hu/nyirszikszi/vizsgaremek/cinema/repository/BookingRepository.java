@@ -23,5 +23,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
             LocalDateTime time
     );
 
+    List<Booking> findByShowtime_Id(int showtimeId);
+
 
 }
