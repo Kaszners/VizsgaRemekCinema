@@ -26,9 +26,15 @@ public class BookingController {
 
 
     @GetMapping("/me")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER','STAFF','ADMIN')")
     public List<BookingResponse> getCurrentUserBookings(){
         return bookingService.getCurrentUserBookings();
+    }
+
+    @GetMapping("/confirm/{token}")
+    public String confirmBooking(@PathVariable String token){
+        bookingService.confirmBooking(token);
+        return "Booking confirmed";
     }
 
 

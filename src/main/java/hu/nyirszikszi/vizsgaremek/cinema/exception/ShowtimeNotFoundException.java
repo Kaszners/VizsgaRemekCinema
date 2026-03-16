@@ -1,7 +1,7 @@
 package hu.nyirszikszi.vizsgaremek.cinema.exception;
 
-public class ShowtimeDoesntExistException extends RuntimeException {
-    public ShowtimeDoesntExistException( ) {
+public class ShowtimeNotFoundException extends RuntimeException {
+    public ShowtimeNotFoundException( ) {
         super("Nincs ezen az idoponton vetites :( ");
     }
 }

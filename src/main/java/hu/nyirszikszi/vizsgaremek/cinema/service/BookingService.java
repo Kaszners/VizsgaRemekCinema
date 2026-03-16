@@ -5,6 +5,7 @@ import hu.nyirszikszi.vizsgaremek.cinema.dto.BookingResponse;
 import hu.nyirszikszi.vizsgaremek.cinema.dto.CreateBookingRequest;
 import hu.nyirszikszi.vizsgaremek.cinema.entity.*;
 import hu.nyirszikszi.vizsgaremek.cinema.enums.BookingStatus;
+import hu.nyirszikszi.vizsgaremek.cinema.exception.BookingNotFoundException;
 import hu.nyirszikszi.vizsgaremek.cinema.exception.InvalidCredentialsException;
 import hu.nyirszikszi.vizsgaremek.cinema.exception.SeatAlreadyBookedException;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.BookingRepository;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +30,7 @@ public class BookingService {
     private final UserCredentialsRepository userCredentialsRepository;
     private final ShowtimeRepository showtimeRepository;
     private final SeatRepository seatRepository;
+    private final EmailService emailService;
 
 
     @Transactional
@@ -53,6 +56,8 @@ public class BookingService {
                 .findByUsername(username)
                 .orElseThrow(InvalidCredentialsException::new);
 
+        String confirmationToken = UUID.randomUUID().toString();
+
         User user = credentials.getUser();
 
         Showtime showtime = showtimeRepository
@@ -69,8 +74,11 @@ public class BookingService {
         booking.setSeat(seat);
         booking.setBookingStatus(BookingStatus.PENDING);
         booking.setTimeOfCreation(LocalDateTime.now());
+        booking.setConfirmationToken(confirmationToken);
 
         bookingRepository.save(booking);
+
+        emailService.sendBookingConfirmation(user.getEmail(),confirmationToken);
 
     }
 
@@ -97,8 +105,23 @@ public class BookingService {
                         booking.getSeat().getId()
                 ))
                 .toList();
+    }
+
+
+    public void confirmBooking(String token){
+
+        Booking booking = bookingRepository.findByConfirmationToken(token)
+                .orElseThrow(BookingNotFoundException::new);
+
+        if (booking.getBookingStatus() != BookingStatus.PENDING){throw new IllegalStateException("Booking already processed");}
+
+        booking.setBookingStatus(BookingStatus.CONFIRMED);
+
+        bookingRepository.save(booking);
 
     }
+
+
 
 
 

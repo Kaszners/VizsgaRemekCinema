@@ -56,6 +56,9 @@ public class Booking {
     @Column(name = "created")
     private LocalDateTime timeOfCreation;
 
+    @Column(name = "booking_confirmation_token")
+    private String confirmationToken;
+
 
 
 }

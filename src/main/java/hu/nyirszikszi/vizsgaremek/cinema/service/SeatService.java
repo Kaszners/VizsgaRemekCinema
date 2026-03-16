@@ -7,7 +7,7 @@ import hu.nyirszikszi.vizsgaremek.cinema.entity.Seat;
 import hu.nyirszikszi.vizsgaremek.cinema.entity.Showtime;
 import hu.nyirszikszi.vizsgaremek.cinema.entity.Theater;
 import hu.nyirszikszi.vizsgaremek.cinema.enums.BookingStatus;
-import hu.nyirszikszi.vizsgaremek.cinema.exception.ShowtimeDoesntExistException;
+import hu.nyirszikszi.vizsgaremek.cinema.exception.ShowtimeNotFoundException;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.BookingRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.SeatRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.ShowtimeRepository;
@@ -28,7 +28,7 @@ public class SeatService {
 
     public List<SeatAvailabilityResponse> getSeatAvailability(int showtimeId){
         Showtime showtime = showtimeRepository.findById(showtimeId)
-                .orElseThrow(ShowtimeDoesntExistException::new);
+                .orElseThrow(ShowtimeNotFoundException::new);
 
         Theater theater = showtime.getTheater();
 
