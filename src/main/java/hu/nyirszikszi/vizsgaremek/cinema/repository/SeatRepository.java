@@ -5,8 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface SeatRepository extends JpaRepository<Seat, Integer> {
+public interface SeatRepository extends JpaRepository<Seat, Long> {
 
-    List<Seat> findByTheater_Id(int id);
+    List<Seat> findByTheater_Id(Long id);
 
 }

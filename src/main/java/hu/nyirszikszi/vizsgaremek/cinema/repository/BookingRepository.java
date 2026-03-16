@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface BookingRepository extends JpaRepository<Booking, Integer> {
-    List<Booking> findAllByUser_Id(int id);
+public interface BookingRepository extends JpaRepository<Booking, Long> {
+    List<Booking> findAllByUser_Id(Long id);
 
 
     boolean existsBySeat_IdAndShowtime_IdAndBookingStatusIn(
-            int seat,
-            int showtime,
+            Long seat,
+            Long showtime,
             List<BookingStatus> statuses
     );
 
@@ -24,9 +24,11 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
             LocalDateTime time
     );
 
-    List<Booking> findByShowtime_Id(int showtimeId);
+    List<Booking> findByShowtime_Id(Long showtimeId);
 
     Optional<Booking> findByConfirmationToken(String token);
+
+    void deleteAllByUser_Id(Long userId);
 
 
 }

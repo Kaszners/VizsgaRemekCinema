@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 
+import org.springframework.security.access.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -118,6 +119,29 @@ public class BookingService {
         booking.setBookingStatus(BookingStatus.CONFIRMED);
 
         bookingRepository.save(booking);
+
+    }
+
+    public void cancelBooking(Long bookingId){
+        String username = SecurityUtil.getCurrentUsername();
+
+        UserCredentials credentials = userCredentialsRepository
+                .findByUsername(username)
+                .orElseThrow(InvalidCredentialsException::new);
+
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(BookingNotFoundException::new);
+
+        if (!booking.getUser().getId().equals(credentials.getId())){
+            throw new AccessDeniedException("Not current users booking");
+        }
+        if (booking.getBookingStatus() == BookingStatus.CANCELLED){
+            throw new IllegalStateException("Already cancelled");
+        }
+        booking.setBookingStatus(BookingStatus.CANCELLED);
+
+        bookingRepository.save(booking);
+
 
     }
 

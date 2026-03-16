@@ -33,11 +33,11 @@ public class ShowtimeSeeder implements CommandLineRunner {
     }
 
     private void seedShowtimes(){
-        Movie dune = movieRepository.findById(1).orElseThrow();
-        Movie interstellar = movieRepository.findById(2).orElseThrow();
+        Movie dune = movieRepository.findById(1L).orElseThrow();
+        Movie interstellar = movieRepository.findById(2L).orElseThrow();
 
-        Theater smallTheater = theaterRepository.findById(1).orElseThrow();
-        Theater largeTheater = theaterRepository.findById(3).orElseThrow();
+        Theater smallTheater = theaterRepository.findById(1L).orElseThrow();
+        Theater largeTheater = theaterRepository.findById(3L).orElseThrow();
 
         Showtime show1 = new Showtime();
         show1.setMovie(dune);

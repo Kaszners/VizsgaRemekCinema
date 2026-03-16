@@ -22,7 +22,7 @@ public class UserController {
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ADMIN')")
-    public void deleteById(@PathVariable int id){
+    public void deleteById(@PathVariable Long id){
         userService.deleteUserById(id);
 
     }
@@ -31,6 +31,12 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     public UserProfileResponse getMyProfile(){
          return userService.getCurrentUserProfile();
+    }
+
+    @DeleteMapping("/delete/me")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCurrentUser(){
+        userService.deleteCurrentUser();
     }
 
 

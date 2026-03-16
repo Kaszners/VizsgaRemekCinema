@@ -6,11 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface UserCredentialsRepository extends JpaRepository<UserCredentials,Integer> {
+public interface UserCredentialsRepository extends JpaRepository<UserCredentials,Long> {
 
     Optional<UserCredentials> findByUsername(String username);
 
     Optional<UserCredentials> findByUser_EmailIgnoreCase(String email);
 
-    Optional<UserCredentials> deleteByUserId(int user);
+    Optional<UserCredentials> deleteByUserId(Long user);
 }

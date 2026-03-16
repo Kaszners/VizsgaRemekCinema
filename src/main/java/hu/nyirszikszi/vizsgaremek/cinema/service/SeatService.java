@@ -26,7 +26,7 @@ public class SeatService {
     private final SeatRepository seatRepository;
     private final BookingRepository bookingRepository;
 
-    public List<SeatAvailabilityResponse> getSeatAvailability(int showtimeId){
+    public List<SeatAvailabilityResponse> getSeatAvailability(Long showtimeId){
         Showtime showtime = showtimeRepository.findById(showtimeId)
                 .orElseThrow(ShowtimeNotFoundException::new);
 
@@ -36,7 +36,7 @@ public class SeatService {
 
         List<Booking> bookings = bookingRepository.findByShowtime_Id(showtimeId);
 
-        Map<Integer, BookingStatus> seatStatusMap =
+        Map<Long, BookingStatus> seatStatusMap =
                 bookings.stream()
                         .collect(Collectors.toMap(
                                 booking -> booking.getSeat().getId(),

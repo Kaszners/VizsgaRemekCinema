@@ -19,7 +19,7 @@ public class ShowtimeController {
 
 
     @GetMapping("/{showtimeId}/seats")
-    public List<SeatAvailabilityResponse> getSeatAvailability(@PathVariable int showtimeId){
+    public List<SeatAvailabilityResponse> getSeatAvailability(@PathVariable Long showtimeId){
         return seatService.getSeatAvailability(showtimeId);
     }
 
