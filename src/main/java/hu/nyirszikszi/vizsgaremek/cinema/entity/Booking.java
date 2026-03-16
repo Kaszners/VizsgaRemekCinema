@@ -10,12 +10,28 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Entity
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "cinema_booking")
+@Entity
+@Table(name = "cinema_booking",
+       indexes = {
+        @Index(
+                name = "idx_booking_seat_showtime",
+               columnList = "seat_id, showtime_id"
+        ),
+        @Index(
+                name = "idx_booking_showtime",
+               columnList = "showtime_id"
+        ),
+        @Index(
+                name = "idx_booking_status_time",
+                columnList = "booking_status, created"
+        )
+    }
+)
 public class Booking {
 
     @Id
