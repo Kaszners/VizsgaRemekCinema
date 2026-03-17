@@ -19,13 +19,7 @@ public class UserController {
     private final UserService userService;
 
 
-    @DeleteMapping("/delete/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('ADMIN')")
-    public void deleteById(@PathVariable Long id){
-        userService.deleteUserById(id);
 
-    }
 
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
