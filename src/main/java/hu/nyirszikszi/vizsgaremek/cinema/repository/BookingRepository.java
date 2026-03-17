@@ -12,6 +12,8 @@ import java.util.Optional;
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findAllByUser_Id(Long id);
 
+    List<Booking> deleteAllByShowtime_Id(Long id);
+
 
     boolean existsBySeat_IdAndShowtime_IdAndBookingStatusIn(
             Long seat,

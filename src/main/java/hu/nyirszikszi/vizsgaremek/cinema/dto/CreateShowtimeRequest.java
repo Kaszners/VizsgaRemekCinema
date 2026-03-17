@@ -1,24 +1,28 @@
 package hu.nyirszikszi.vizsgaremek.cinema.dto;
 
-import hu.nyirszikszi.vizsgaremek.cinema.enums.TheaterSize;
-import jakarta.validation.constraints.NotBlank;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
-@NoArgsConstructor
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
-public class CreateTheaterRequest {
+@NoArgsConstructor
+@AllArgsConstructor
+public class CreateShowtimeRequest {
 
     @NotNull
-    private String name;
+    private Long movieId;
 
     @NotNull
-    private TheaterSize size;
+    private Long theaterId;
+
+    @NotNull
+    LocalDateTime showStartTime;
 
 
 }

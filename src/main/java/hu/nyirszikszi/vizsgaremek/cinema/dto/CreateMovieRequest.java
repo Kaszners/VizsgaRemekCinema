@@ -18,7 +18,7 @@ public class CreateMovieRequest {
     @NotNull
     private String title;
 
-    @NotBlank
+
     @NotNull
     private int duration;
 
