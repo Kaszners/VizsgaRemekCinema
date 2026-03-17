@@ -1,6 +1,7 @@
 package hu.nyirszikszi.vizsgaremek.cinema.controller;
 
 
+import hu.nyirszikszi.vizsgaremek.cinema.dto.CreateMovieRequest;
 import hu.nyirszikszi.vizsgaremek.cinema.dto.CreateTheaterRequest;
 import hu.nyirszikszi.vizsgaremek.cinema.service.AdminService;
 import jakarta.validation.Valid;
@@ -38,6 +39,17 @@ public class AdminController {
     public void deleteTheaterById(@PathVariable Long id){
         adminService.deleteTheaterById(id);
     }
+
+    @PostMapping("/create/movie")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("HasRole('ADMIN')")
+    public void createMovie(@RequestBody @Valid CreateMovieRequest request){
+        adminService.createMovie(request);
+    }
+
+
+
+
 
 
 

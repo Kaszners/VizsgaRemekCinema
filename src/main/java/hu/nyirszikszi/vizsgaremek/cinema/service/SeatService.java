@@ -7,6 +7,7 @@ import hu.nyirszikszi.vizsgaremek.cinema.entity.Seat;
 import hu.nyirszikszi.vizsgaremek.cinema.entity.Showtime;
 import hu.nyirszikszi.vizsgaremek.cinema.entity.Theater;
 import hu.nyirszikszi.vizsgaremek.cinema.enums.BookingStatus;
+import hu.nyirszikszi.vizsgaremek.cinema.enums.TheaterSize;
 import hu.nyirszikszi.vizsgaremek.cinema.exception.ShowtimeNotFoundException;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.BookingRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.SeatRepository;
@@ -14,6 +15,7 @@ import hu.nyirszikszi.vizsgaremek.cinema.repository.ShowtimeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,6 +27,29 @@ public class SeatService {
     private final ShowtimeRepository showtimeRepository;
     private final SeatRepository seatRepository;
     private final BookingRepository bookingRepository;
+
+
+    public void generateSeats(Theater theater){
+        List<Seat> seats = new ArrayList<>();
+
+        int rows = theater.getSize().getRows();
+        int cols = theater.getSize().getColumns();
+
+
+
+        for(int r = 1; r <= rows; r++){
+            for(int c = 1; c <= cols; c++){
+                Seat seat = new Seat();
+                seat.setRowNumber(r);
+                seat.setSeatNumber(c);
+                seat.setTheater(theater);
+
+                seats.add(seat);
+            }
+        }
+        seatRepository.saveAll(seats);
+
+    }
 
     public List<SeatAvailabilityResponse> getSeatAvailability(Long showtimeId){
         Showtime showtime = showtimeRepository.findById(showtimeId)
