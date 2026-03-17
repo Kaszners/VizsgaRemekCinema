@@ -3,6 +3,8 @@ package hu.nyirszikszi.vizsgaremek.cinema.controller;
 
 import hu.nyirszikszi.vizsgaremek.cinema.dto.CreateMovieRequest;
 import hu.nyirszikszi.vizsgaremek.cinema.dto.CreateTheaterRequest;
+import hu.nyirszikszi.vizsgaremek.cinema.dto.MovieResponse;
+import hu.nyirszikszi.vizsgaremek.cinema.dto.TheaterResponse;
 import hu.nyirszikszi.vizsgaremek.cinema.service.AdminService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +31,8 @@ public class AdminController {
     @PostMapping("/create/theater")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("HasRole('ADMIN')")
-    public void createTheater(@RequestBody @Valid CreateTheaterRequest request){
-        adminService.createTheater(request);
+    public TheaterResponse createTheater(@RequestBody @Valid CreateTheaterRequest request){
+        return adminService.createTheater(request);
     }
 
     @DeleteMapping("/delete/theater/{id}")
@@ -43,10 +45,16 @@ public class AdminController {
     @PostMapping("/create/movie")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("HasRole('ADMIN')")
-    public void createMovie(@RequestBody @Valid CreateMovieRequest request){
-        adminService.createMovie(request);
+    public MovieResponse createMovie(@RequestBody @Valid CreateMovieRequest request){
+        return adminService.createMovie(request);
     }
 
+    @DeleteMapping("/delete/movie/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteMoiveById(@PathVariable Long id){
+        adminService.deleteMovieById(id);
+    }
 
 
 

@@ -2,6 +2,8 @@ package hu.nyirszikszi.vizsgaremek.cinema.service;
 
 import hu.nyirszikszi.vizsgaremek.cinema.dto.CreateMovieRequest;
 import hu.nyirszikszi.vizsgaremek.cinema.dto.CreateTheaterRequest;
+import hu.nyirszikszi.vizsgaremek.cinema.dto.MovieResponse;
+import hu.nyirszikszi.vizsgaremek.cinema.dto.TheaterResponse;
 import hu.nyirszikszi.vizsgaremek.cinema.entity.Movie;
 import hu.nyirszikszi.vizsgaremek.cinema.entity.Seat;
 import hu.nyirszikszi.vizsgaremek.cinema.entity.Theater;
@@ -37,7 +39,7 @@ public class AdminService {
 
 
     @Transactional
-    public void createTheater(CreateTheaterRequest request){
+    public TheaterResponse createTheater(CreateTheaterRequest request){
         if (theaterRepository.existsByNameIgnoreCase(request.getName())){
             throw new DuplicateTheaterException();
         }
@@ -48,6 +50,12 @@ public class AdminService {
         Theater saved = theaterRepository.save(theater);
 
         seatService.generateSeats(saved);
+
+        return new TheaterResponse(
+                saved.getId(),
+                saved.getName(),
+                saved.getSize()
+        );
 
     }
 
@@ -60,17 +68,29 @@ public class AdminService {
     }
 
 
-    public void createMovie(CreateMovieRequest request){
+    public MovieResponse createMovie(CreateMovieRequest request){
         Movie movie = new Movie();
         movie.setTitle(request.getTitle());
         movie.setDuration(request.getDuration());
         movie.setPosterUrl(request.getPosterUrl());
         movie.setTrailerUrl(request.getTrailerUrl());
 
-        movieRepository.save(movie);
+        Movie saved = movieRepository.save(movie);
+
+        return new MovieResponse(
+                saved.getId(),
+                saved.getTitle(),
+                saved.getDuration(),
+                saved.getPosterUrl(),
+                saved.getTrailerUrl()
+        );
     }
 
-
+    public void deleteMovieById(Long id){
+        if (!movieRepository.existsById(id)){
+            throw new MovieNotFoundException();
+        }
+    }
 
 
 
