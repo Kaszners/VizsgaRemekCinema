@@ -1,7 +1,9 @@
 package hu.nyirszikszi.vizsgaremek.cinema.controller;
 
 
+import hu.nyirszikszi.vizsgaremek.cinema.dto.CreateTheaterRequest;
 import hu.nyirszikszi.vizsgaremek.cinema.service.AdminService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +25,11 @@ public class AdminController {
     }
 
 
-
+    @PostMapping("/create/theater")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("HasRole('ADMIN')")
+    public void createTheater(@RequestBody @Valid CreateTheaterRequest request){
+        adminService.createTheater(request);
+    }
 
 }
