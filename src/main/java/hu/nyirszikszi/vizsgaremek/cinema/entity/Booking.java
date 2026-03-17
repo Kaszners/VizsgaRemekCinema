@@ -17,6 +17,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "cinema_booking",
+       uniqueConstraints = {
+        @UniqueConstraint(
+                name = "uk_booking_seat_showtime_active",
+                columnNames = {"seat_id","showtime_id"}
+        )
+       },
        indexes = {
         @Index(
                 name = "idx_booking_seat_showtime",

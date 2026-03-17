@@ -8,6 +8,7 @@ import hu.nyirszikszi.vizsgaremek.cinema.enums.BookingStatus;
 import hu.nyirszikszi.vizsgaremek.cinema.exception.BookingNotFoundException;
 import hu.nyirszikszi.vizsgaremek.cinema.exception.InvalidCredentialsException;
 import hu.nyirszikszi.vizsgaremek.cinema.exception.SeatAlreadyBookedException;
+import hu.nyirszikszi.vizsgaremek.cinema.exception.SeatNotFoundException;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.BookingRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.SeatRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.ShowtimeRepository;
@@ -37,6 +38,10 @@ public class BookingService {
     @Transactional
     public void createBooking(CreateBookingRequest request){
 
+        Seat seat = seatRepository.findByIdWithLock(request.SeatId())
+                .orElseThrow(SeatNotFoundException::new);
+
+
         boolean alreadyBooked = bookingRepository.existsBySeat_IdAndShowtime_IdAndBookingStatusIn(
                 request.SeatId(),
                 request.showtimeId(),
@@ -65,9 +70,6 @@ public class BookingService {
                 .findById(request.showtimeId())
                 .orElseThrow(RuntimeException::new);
 
-        Seat seat = seatRepository
-                .findById(request.SeatId())
-                .orElseThrow(RuntimeException::new);
 
         Booking booking = new Booking();
         booking.setUser(user);
