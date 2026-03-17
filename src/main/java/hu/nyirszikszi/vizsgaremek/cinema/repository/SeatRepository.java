@@ -16,7 +16,7 @@ public interface SeatRepository extends JpaRepository<Seat, Long> {
     List<Seat> deleteAllByTheater_Id(Long id);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("SELECT s frome Seat s WHERE s.id = :id ")
+    @Query("SELECT s FROM Seat s WHERE s.id = :id ")
     Optional<Seat> findByIdWithLock(Long id);
 
 }
