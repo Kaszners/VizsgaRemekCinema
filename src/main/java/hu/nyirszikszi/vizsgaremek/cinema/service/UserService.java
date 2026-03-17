@@ -6,6 +6,7 @@ import hu.nyirszikszi.vizsgaremek.cinema.dto.UserProfileResponse;
 import hu.nyirszikszi.vizsgaremek.cinema.entity.User;
 import hu.nyirszikszi.vizsgaremek.cinema.entity.UserCredentials;
 import hu.nyirszikszi.vizsgaremek.cinema.exception.InvalidCredentialsException;
+import hu.nyirszikszi.vizsgaremek.cinema.exception.UserNotFoundException;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.BookingRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.UserCredentialsRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.UserRepository;
@@ -22,7 +23,14 @@ public class UserService {
     private final UserCredentialsRepository userCredentialsRepository;
     private final BookingRepository bookingRepository;
 
+    @Transactional
+    public void deleteUserById(Long id){
+        userRepository.findById(id)
+                .orElseThrow(UserNotFoundException:: new );
 
+        userCredentialsRepository.deleteByUserId(id);
+        userRepository.deleteById(id);
+    }
 
 
     public UserProfileResponse getCurrentUserProfile(){

@@ -1,6 +1,7 @@
 package hu.nyirszikszi.vizsgaremek.cinema.seeder;
 
 
+import hu.nyirszikszi.vizsgaremek.cinema.dto.CreateTheaterRequest;
 import hu.nyirszikszi.vizsgaremek.cinema.enums.TheaterSize;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.TheaterRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.service.TheaterService;
@@ -24,11 +25,21 @@ public class TheaterSeeder implements CommandLineRunner {
             return;
         }
 
-        theaterService.createTheater("Small Theater 1", TheaterSize.SMALL);
-        theaterService.createTheater("Small Theater 2", TheaterSize.SMALL);
+        theaterService.createTheater(
+                new CreateTheaterRequest("Small Theater 1", TheaterSize.SMALL)
+        );
 
-        theaterService.createTheater("Large Theater 1",TheaterSize.LARGE);
-        theaterService.createTheater("Large Theater 2",TheaterSize.LARGE);
+        theaterService.createTheater(
+                new CreateTheaterRequest("Small Theater 2", TheaterSize.SMALL)
+        );
+
+        theaterService.createTheater(
+                new CreateTheaterRequest("Large Theater 1", TheaterSize.LARGE)
+        );
+
+        theaterService.createTheater(
+                new CreateTheaterRequest("Large Theater 2", TheaterSize.LARGE)
+        );
     }
 
 

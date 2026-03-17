@@ -1,49 +1,73 @@
 package hu.nyirszikszi.vizsgaremek.cinema.service;
 
-import hu.nyirszikszi.vizsgaremek.cinema.entity.Seat;
+import hu.nyirszikszi.vizsgaremek.cinema.dto.CreateTheaterRequest;
+import hu.nyirszikszi.vizsgaremek.cinema.dto.TheaterResponse;
+import hu.nyirszikszi.vizsgaremek.cinema.entity.Showtime;
 import hu.nyirszikszi.vizsgaremek.cinema.entity.Theater;
-import hu.nyirszikszi.vizsgaremek.cinema.enums.TheaterSize;
-import hu.nyirszikszi.vizsgaremek.cinema.repository.SeatRepository;
+import hu.nyirszikszi.vizsgaremek.cinema.exception.DuplicateTheaterException;
+import hu.nyirszikszi.vizsgaremek.cinema.exception.TheaterNotFoundException;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.TheaterRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class TheaterService {
 
     private final TheaterRepository theaterRepository;
-    private final SeatRepository seatRepository;
+    private final SeatService seatService;
 
 
-    public void createTheater(String name, TheaterSize size){
+    @Transactional
+    public TheaterResponse createTheater(CreateTheaterRequest request){
+        if (theaterRepository.existsByNameIgnoreCase(request.getName())){
+            throw new DuplicateTheaterException();
+        }
         Theater theater = new Theater();
-        theater.setName(name);
-        theater.setSize(size);
+        theater.setName(request.getName());
+        theater.setSize(request.getSize());
 
-        theaterRepository.save(theater);
+        Theater saved = theaterRepository.save(theater);
 
-        generateSeats(theater);
+        seatService.generateSeats(saved);
 
+        return new TheaterResponse(
+                saved.getId(),
+                saved.getName(),
+                saved.getSize()
+        );
+    }
+
+    @Transactional
+    public void deleteTheaterById(Long id){
+        if (!theaterRepository.existsById(id)){
+            throw new TheaterNotFoundException();
+        }
+
+        List<Showtime> showtimes = showtimeRepository.findAllByTheater_Id(id);
+
+        for(Showtime showtime : showtimes){
+            bookingRepository.deleteAllByShowtime_Id(showtime.getId());
+        }
+
+        showtimeRepository.deleteAllByTheater_Id(id);
+        seatRepository.deleteAllByTheater_Id(id);
+        theaterRepository.deleteById(id);
     }
 
 
-
-    public void generateSeats(Theater theater){
-        int rows = theater.getSize().getRows();
-        int colums = theater.getSize().getColumns();
-
-        for (int row =1; row <= rows; row++){
-            for (int seatNumber = 1; seatNumber <= colums;seatNumber++){
-                Seat seat = new Seat();
-                seat.setRowNumber(row);
-                seat.setSeatNumber(seatNumber);
-                seat.setTheater(theater);
-                seatRepository.save(seat);
-            }
-        }
-
-
+    public List<TheaterResponse> getAllTheaters(){
+        return theaterRepository.findAll()
+                .stream()
+                .map(theater -> new TheaterResponse(
+                        theater.getId(),
+                        theater.getName(),
+                        theater.getSize()
+                ))
+                .toList();
     }
 
 
