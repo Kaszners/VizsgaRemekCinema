@@ -6,6 +6,9 @@ import hu.nyirszikszi.vizsgaremek.cinema.entity.Showtime;
 import hu.nyirszikszi.vizsgaremek.cinema.entity.Theater;
 import hu.nyirszikszi.vizsgaremek.cinema.exception.DuplicateTheaterException;
 import hu.nyirszikszi.vizsgaremek.cinema.exception.TheaterNotFoundException;
+import hu.nyirszikszi.vizsgaremek.cinema.repository.BookingRepository;
+import hu.nyirszikszi.vizsgaremek.cinema.repository.SeatRepository;
+import hu.nyirszikszi.vizsgaremek.cinema.repository.ShowtimeRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.TheaterRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,9 @@ public class TheaterService {
 
     private final TheaterRepository theaterRepository;
     private final SeatService seatService;
+    private final ShowtimeRepository showtimeRepository;
+    private final BookingRepository bookingRepository;
+    private final SeatRepository seatRepository;
 
 
     @Transactional

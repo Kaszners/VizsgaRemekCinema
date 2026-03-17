@@ -5,7 +5,9 @@ import hu.nyirszikszi.vizsgaremek.cinema.dto.MovieResponse;
 import hu.nyirszikszi.vizsgaremek.cinema.entity.Movie;
 import hu.nyirszikszi.vizsgaremek.cinema.entity.Showtime;
 import hu.nyirszikszi.vizsgaremek.cinema.exception.MovieNotFoundException;
+import hu.nyirszikszi.vizsgaremek.cinema.repository.BookingRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.MovieRepository;
+import hu.nyirszikszi.vizsgaremek.cinema.repository.ShowtimeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,8 @@ import java.util.List;
 public class MovieService {
 
     private final MovieRepository movieRepository;
+    private final ShowtimeRepository showtimeRepository;
+    private final BookingRepository bookingRepository;
 
 
     public MovieResponse createMovie(CreateMovieRequest request){

@@ -132,7 +132,7 @@ public class BookingService {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(BookingNotFoundException::new);
 
-        if (!booking.getUser().getId().equals(credentials.getId())){
+        if (!booking.getUser().getId().equals(credentials.getUser().getId())){
             throw new AccessDeniedException("Not current users booking");
         }
         if (booking.getBookingStatus() == BookingStatus.CANCELLED){
