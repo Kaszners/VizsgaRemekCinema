@@ -32,4 +32,13 @@ public class AdminController {
         adminService.createTheater(request);
     }
 
+    @DeleteMapping("/delete/theater/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteTheaterById(@PathVariable Long id){
+        adminService.deleteTheaterById(id);
+    }
+
+
+
 }

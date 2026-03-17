@@ -3,6 +3,7 @@ package hu.nyirszikszi.vizsgaremek.cinema.service;
 import hu.nyirszikszi.vizsgaremek.cinema.dto.CreateTheaterRequest;
 import hu.nyirszikszi.vizsgaremek.cinema.entity.Theater;
 import hu.nyirszikszi.vizsgaremek.cinema.exception.DuplicateTheaterException;
+import hu.nyirszikszi.vizsgaremek.cinema.exception.TheaterNotFoundException;
 import hu.nyirszikszi.vizsgaremek.cinema.exception.UserNotFoundException;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.TheaterRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.UserCredentialsRepository;
@@ -29,19 +30,26 @@ public class AdminService {
     }
 
 
-    @Transactional
+
     public void createTheater(CreateTheaterRequest request){
-
-        theaterRepository.findByNameIgnoreCase(request.getName()).ifPresent(theater -> {
+        if (theaterRepository.existsByNameIgnoreCase(request.getName())){
             throw new DuplicateTheaterException();
-        });
-
+        }
         Theater theater = new Theater();
-
         theater.setName(request.getName());
         theater.setSize(request.getSize());
 
         theaterRepository.save(theater);
     }
+
+    public void deleteTheaterById(Long id){
+        if (!theaterRepository.existsById(id)){
+            throw new TheaterNotFoundException();
+        }
+
+        theaterRepository.deleteById(id);
+
+    }
+
 
 }

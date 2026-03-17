@@ -11,4 +11,6 @@ public interface TheaterRepository extends JpaRepository<Theater,Long> {
 
     Optional<Theater> findByNameIgnoreCase(String name);
 
+    Boolean existsByNameIgnoreCase(String name);
+
 }
