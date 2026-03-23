@@ -1,30 +1,54 @@
 package hu.nyirszikszi.vizsgaremek.cinema.service;
 
+import hu.nyirszikszi.vizsgaremek.cinema.entity.Booking;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
+import org.thymeleaf.context.Context;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class EmailService {
 
     private final JavaMailSender mailSender;
+    private final SpringTemplateEngine templateEngine;
 
 
-    public void sendBookingConfirmation(String email, String token){
+    public void sendBookingConfirmation(String email, String token, List<Booking> bookings) {
+        Context context = new Context();
 
-        SimpleMailMessage message = new SimpleMailMessage();
+        context.setVariable("username", bookings.get(0).getUser().getFullName());
+        context.setVariable("showtime", bookings.get(0).getShowtime().getShowStartTime());
 
-        message.setFrom("sebestyenkaszner@gmail.com");
-        message.setTo(email);
-        message.setSubject("Confirm your cinema Booking");
-
-        message.setText(
-                "please confirm your booking:\n\n+" +
-                "http://localhost:8080/cinema/booking/confirm/"+token
+        context.setVariable("seats", bookings.stream()
+                .map(Booking::getSeat)
+                .toList()
         );
-        mailSender.send(message);
-    }
 
+        context.setVariable("confirmUrl",
+                "http://localhost:8080/cinema/booking/confirm?token=" + token
+        );
+
+        String html = templateEngine.process("booking-confirmation", context);
+
+        MimeMessage message = mailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setTo(email);
+            helper.setSubject("Confirm your booking");
+            helper.setText(html, true);
+
+            mailSender.send(message);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

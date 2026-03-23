@@ -87,6 +87,12 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.CONFLICT, exception.getMessage());
     }
 
+    @ExceptionHandler(InvalidConfirmationTokenException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidConfirmationToken(
+            InvalidConfirmationTokenException exception){
+        return build(HttpStatus.BAD_REQUEST,exception.getMessage());
+    }
+
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ErrorResponse> handleIllegalState(
             IllegalStateException exception) {

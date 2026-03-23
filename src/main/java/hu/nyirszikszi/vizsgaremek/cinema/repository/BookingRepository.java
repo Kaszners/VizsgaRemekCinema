@@ -14,6 +14,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     List<Booking> deleteAllByShowtime_Id(Long id);
 
+    List<Booking> findAllByConfirmationToken(String token);
 
     boolean existsBySeat_IdAndShowtime_IdAndBookingStatusIn(
             Long seat,

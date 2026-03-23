@@ -42,7 +42,6 @@ public class JwtService {
                 )
                 .signWith(secretKey)
                 .compact();
-
     }
 
     public String extractRole(String token){

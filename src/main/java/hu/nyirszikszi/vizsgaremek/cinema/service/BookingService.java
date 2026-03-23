@@ -5,10 +5,7 @@ import hu.nyirszikszi.vizsgaremek.cinema.dto.BookingResponse;
 import hu.nyirszikszi.vizsgaremek.cinema.dto.CreateBookingRequest;
 import hu.nyirszikszi.vizsgaremek.cinema.entity.*;
 import hu.nyirszikszi.vizsgaremek.cinema.enums.BookingStatus;
-import hu.nyirszikszi.vizsgaremek.cinema.exception.BookingNotFoundException;
-import hu.nyirszikszi.vizsgaremek.cinema.exception.InvalidCredentialsException;
-import hu.nyirszikszi.vizsgaremek.cinema.exception.SeatAlreadyBookedException;
-import hu.nyirszikszi.vizsgaremek.cinema.exception.SeatNotFoundException;
+import hu.nyirszikszi.vizsgaremek.cinema.exception.*;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.BookingRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.SeatRepository;
 import hu.nyirszikszi.vizsgaremek.cinema.repository.ShowtimeRepository;
@@ -21,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.security.access.AccessDeniedException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,21 +35,6 @@ public class BookingService {
 
     @Transactional
     public void createBooking(CreateBookingRequest request){
-
-        Seat seat = seatRepository.findByIdWithLock(request.SeatId())
-                .orElseThrow(SeatNotFoundException::new);
-
-
-        boolean alreadyBooked = bookingRepository.existsBySeat_IdAndShowtime_IdAndBookingStatusIn(
-                request.SeatId(),
-                request.showtimeId(),
-                List.of(BookingStatus.PENDING,BookingStatus.CONFIRMED)
-        );
-
-        if(alreadyBooked){
-            throw new SeatAlreadyBookedException();
-        }
-
         String username = SecurityUtil.getCurrentUsername();
 
         if(username == null){
@@ -62,26 +45,44 @@ public class BookingService {
                 .findByUsername(username)
                 .orElseThrow(InvalidCredentialsException::new);
 
-        String confirmationToken = UUID.randomUUID().toString();
-
         User user = credentials.getUser();
 
-        Showtime showtime = showtimeRepository
-                .findById(request.showtimeId())
+        Showtime showtime = showtimeRepository.findById(request.showtimeId())
                 .orElseThrow(RuntimeException::new);
 
+        String confirmationToken = UUID.randomUUID().toString();
 
-        Booking booking = new Booking();
-        booking.setUser(user);
-        booking.setShowtime(showtime);
-        booking.setSeat(seat);
-        booking.setBookingStatus(BookingStatus.PENDING);
-        booking.setTimeOfCreation(LocalDateTime.now());
-        booking.setConfirmationToken(confirmationToken);
+        List<Booking> bookings = new ArrayList<>();
 
-        bookingRepository.save(booking);
+        for (Long seatId : request.seatIds()){
+            Seat seat = seatRepository.findByIdWithLock(seatId)
+                    .orElseThrow(SeatAlreadyBookedException::new);
 
-        emailService.sendBookingConfirmation(user.getEmail(),confirmationToken);
+            boolean alreadyBooked = bookingRepository
+                    .existsBySeat_IdAndShowtime_IdAndBookingStatusIn(
+                            seatId,
+                            request.showtimeId(),
+                            List.of(BookingStatus.PENDING,BookingStatus.CONFIRMED)
+            );
+            if(alreadyBooked){
+                throw new SeatAlreadyBookedException();
+            }
+            Booking booking = new Booking();
+            booking.setUser(user);
+            booking.setShowtime(showtime);
+            booking.setSeat(seat);
+            booking.setBookingStatus(BookingStatus.PENDING);
+            booking.setTimeOfCreation(LocalDateTime.now());
+            booking.setConfirmationToken(confirmationToken);
+
+            bookings.add(booking);
+
+
+        }
+
+        bookingRepository.saveAll(bookings);
+
+        emailService.sendBookingConfirmation(user.getEmail(),confirmationToken,bookings);
 
     }
 
@@ -113,14 +114,18 @@ public class BookingService {
 
     public void confirmBooking(String token){
 
-        Booking booking = bookingRepository.findByConfirmationToken(token)
-                .orElseThrow(BookingNotFoundException::new);
+        List<Booking> bookings = bookingRepository.findAllByConfirmationToken(token);
 
-        if (booking.getBookingStatus() != BookingStatus.PENDING){throw new IllegalStateException("Booking already processed");}
+        if (bookings.isEmpty()){
+            throw new InvalidConfirmationTokenException();
+        }
+        for (Booking booking : bookings) {
+            if (booking.getBookingStatus() == BookingStatus.CONFIRMED){
+                continue;
+            }
+            booking.setBookingStatus(BookingStatus.CONFIRMED);
+        }
 
-        booking.setBookingStatus(BookingStatus.CONFIRMED);
-
-        bookingRepository.save(booking);
 
     }
 
