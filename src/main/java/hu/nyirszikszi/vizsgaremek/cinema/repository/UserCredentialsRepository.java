@@ -13,4 +13,6 @@ public interface UserCredentialsRepository extends JpaRepository<UserCredentials
     Optional<UserCredentials> findByUser_EmailIgnoreCase(String email);
 
     Optional<UserCredentials> deleteByUserId(Long user);
+
+    Boolean existsByUsername(String username);
 }
