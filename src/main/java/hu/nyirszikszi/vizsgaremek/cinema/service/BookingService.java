@@ -48,7 +48,7 @@ public class BookingService {
         User user = credentials.getUser();
 
         Showtime showtime = showtimeRepository.findById(request.showtimeId())
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(ShowtimeNotFoundException::new);
 
         String confirmationToken = UUID.randomUUID().toString();
 
@@ -56,7 +56,7 @@ public class BookingService {
 
         for (Long seatId : request.seatIds()){
             Seat seat = seatRepository.findByIdWithLock(seatId)
-                    .orElseThrow(SeatAlreadyBookedException::new);
+                    .orElseThrow(SeatNotFoundException::new);
 
             boolean alreadyBooked = bookingRepository
                     .existsBySeat_IdAndShowtime_IdAndBookingStatusIn(
@@ -76,8 +76,6 @@ public class BookingService {
             booking.setConfirmationToken(confirmationToken);
 
             bookings.add(booking);
-
-
         }
 
         bookingRepository.saveAll(bookings);
@@ -112,6 +110,7 @@ public class BookingService {
     }
 
 
+    @Transactional
     public void confirmBooking(String token){
 
         List<Booking> bookings = bookingRepository.findAllByConfirmationToken(token);

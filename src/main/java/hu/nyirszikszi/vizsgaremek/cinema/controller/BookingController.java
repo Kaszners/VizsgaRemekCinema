@@ -31,13 +31,14 @@ public class BookingController {
         return bookingService.getCurrentUserBookings();
     }
 
-    @GetMapping("/confirm/{token}")
-    public String confirmBooking(@PathVariable String token){
+    @GetMapping("/confirm")
+    public String confirmBooking(@RequestParam String token){
         bookingService.confirmBooking(token);
         return "Booking confirmed";
     }
 
     @PostMapping("/{id}/cancel")
+    @PreAuthorize("hasAnyRole('USER','STAFF','ADMIN')")
     public void cancelBooking(@PathVariable Long id){
         bookingService.cancelBooking(id);
     }
