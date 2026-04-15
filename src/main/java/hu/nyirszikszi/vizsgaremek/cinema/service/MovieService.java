@@ -49,7 +49,7 @@ public class MovieService {
         List<Showtime> showtimes = showtimeRepository.findAllByMovie_Id(id);
 
         for (Showtime showtime : showtimes) {
-            bookingRepository.deleteAllByShowtime_Id(id);
+            bookingRepository.deleteAllByShowtime_Id(showtime.getId());
         }
         showtimeRepository.deleteAllByMovie_Id(id);
         movieRepository.deleteById(id);
