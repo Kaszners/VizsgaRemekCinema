@@ -68,4 +68,32 @@ public class MovieService {
                 .toList();
     }
 
+    public MovieResponse updatePosterUrl(Long movieId, String posterUrl) {
+        Movie movie = movieRepository.findById(movieId).orElseThrow(MovieNotFoundException::new);
+        movie.setPosterUrl(posterUrl);
+        Movie saved = movieRepository.save(movie);
+        return new MovieResponse(
+                saved.getId(),
+                saved.getTitle(),
+                saved.getDuration(),
+                saved.getPosterUrl(),
+                saved.getTrailerUrl()
+        );
+    }
+
+    public MovieResponse updateTrailerUrl(Long movieId, String trailerUrl) {
+        Movie movie = movieRepository.findById(movieId).orElseThrow(MovieNotFoundException::new);
+        movie.setTrailerUrl(trailerUrl);
+        Movie saved = movieRepository.save(movie);
+        return new MovieResponse(
+                saved.getId(),
+                saved.getTitle(),
+                saved.getDuration(),
+                saved.getPosterUrl(),
+                saved.getTrailerUrl()
+        );
+    }
+
+
+
 }

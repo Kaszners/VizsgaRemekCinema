@@ -2,6 +2,7 @@ package hu.nyirszikszi.vizsgaremek.cinema.controller;
 
 
 import hu.nyirszikszi.vizsgaremek.cinema.dto.*;
+import hu.nyirszikszi.vizsgaremek.cinema.service.MediaStorageService;
 import hu.nyirszikszi.vizsgaremek.cinema.service.MovieService;
 import hu.nyirszikszi.vizsgaremek.cinema.service.ShowtimeService;
 import hu.nyirszikszi.vizsgaremek.cinema.service.TheaterService;
@@ -10,7 +11,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +24,7 @@ public class AdminController {
     private final TheaterService theaterService;
     private final UserService userService;
     private final ShowtimeService showtimeService;
+    private final MediaStorageService mediaStorageService;
 
 
     @DeleteMapping("/delete/{id}")
@@ -57,6 +61,22 @@ public class AdminController {
     @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
     public void deleteMovieById(@PathVariable Long id){
         movieService.deleteMovieById(id);
+    }
+
+    @PostMapping("/upload/movie/{movieId}/poster")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
+    public MovieResponse uploadMoviePoster(@PathVariable Long movieId, @RequestParam("file") MultipartFile file) {
+        String fileName = mediaStorageService.storePoster(file, movieId);
+        return movieService.updatePosterUrl(movieId, "/cinema/public/media/poster/" + fileName);
+    }
+
+    @PostMapping("/upload/movie/{movieId}/trailer")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
+    public MovieResponse uploadMovieTrailer(@PathVariable Long movieId, @RequestParam("file") MultipartFile file) {
+        String fileName = mediaStorageService.storeTrailer(file, movieId);
+        return movieService.updateTrailerUrl(movieId, "/cinema/public/media/trailer/" + fileName);
     }
 
     @PostMapping("/create/showtime")
